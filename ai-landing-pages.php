@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 define( 'ALP_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once ALP_DIR . 'includes/class-registry.php';
+require_once ALP_DIR . 'includes/class-validator.php';
+require_once ALP_DIR . 'includes/class-page-builder.php';
 require_once ALP_DIR . 'includes/class-abilities.php';
 
 // The Abilities API is in core since WordPress 6.9.

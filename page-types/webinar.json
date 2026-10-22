@@ -2,5 +2,56 @@
   "slug": "webinar",
   "label": "Webinar",
   "description": "A page that promotes a live or recorded webinar and drives registrations.",
-  "sections": []
+  "sections": {
+    "hero": {
+      "label": "Hero",
+      "description": "Top of the page: what the webinar is, when, and a registration button.",
+      "min": 1, "max": 1, "position": "first",
+      "fields": {
+        "headline":     { "type": "string", "required": true,  "max_length": 80 },
+        "subheadline":  { "type": "string", "required": false, "max_length": 200 },
+        "date_time":    { "type": "string", "required": true,  "max_length": 60, "description": "Human readable, e.g. 'Nov 15, 2026 · 17:00 CET'" },
+        "button_label": { "type": "string", "required": true,  "max_length": 30 },
+        "button_url":   { "type": "url",    "required": true }
+      }
+    },
+    "speaker": {
+      "label": "Speaker",
+      "description": "One speaker. Repeat the section for each speaker.",
+      "min": 1, "max": 4,
+      "fields": {
+        "name":  { "type": "string", "required": true,  "max_length": 60 },
+        "role":  { "type": "string", "required": true,  "max_length": 80 },
+        "bio":   { "type": "string", "required": false, "max_length": 300 }
+      }
+    },
+    "agenda": {
+      "label": "Agenda",
+      "description": "What attendees will learn, as a short list.",
+      "min": 0, "max": 1,
+      "fields": {
+        "heading": { "type": "string", "required": true, "max_length": 60 },
+        "items":   { "type": "list",   "required": true, "min_items": 2, "max_items": 8, "max_length": 120 }
+      }
+    },
+    "faq": {
+      "label": "FAQ item",
+      "description": "One question and answer. Optional; repeat for each question.",
+      "min": 0, "max": 8,
+      "fields": {
+        "question": { "type": "string", "required": true, "max_length": 120 },
+        "answer":   { "type": "string", "required": true, "max_length": 400 }
+      }
+    },
+    "cta": {
+      "label": "Closing call to action",
+      "description": "Bottom of the page: final push to register.",
+      "min": 1, "max": 1, "position": "last",
+      "fields": {
+        "headline":     { "type": "string", "required": true, "max_length": 80 },
+        "button_label": { "type": "string", "required": true, "max_length": 30 },
+        "button_url":   { "type": "url",    "required": true }
+      }
+    }
+  }
 }
