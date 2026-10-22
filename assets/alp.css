@@ -43,3 +43,8 @@
 /* Consecutive FAQ items read as one block, not separate sections. */
 .alp-faq:has(+ .alp-faq) { padding-bottom: 0; }
 .alp-faq + .alp-faq { padding-top: 0; }
+
+/* The theme resets padding on nested groups that have global padding; this is more specific. */
+.alp-speakers > .wp-block-group.alp-card.alp-speaker {
+	padding: var(--wp--preset--spacing--40, 2rem);
+}
