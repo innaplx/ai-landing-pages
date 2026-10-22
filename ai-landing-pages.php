@@ -26,3 +26,13 @@ if ( ! function_exists( 'wp_register_ability' ) ) {
 }
 
 ALP_Abilities::init();
+
+/**
+ * Layout-only styles: spacing, alignment and grid. No fonts and no fixed colors.
+ * Values come from the theme's own presets (theme.json), so every theme keeps its look.
+ */
+function alp_enqueue_styles() {
+	wp_enqueue_style( 'ai-landing-pages', plugins_url( 'assets/alp.css', __FILE__ ), array(), '0.2.0' );
+}
+add_action( 'wp_enqueue_scripts', 'alp_enqueue_styles' );
+add_action( 'enqueue_block_assets', 'alp_enqueue_styles' );

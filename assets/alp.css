@@ -1,0 +1,45 @@
+/* AI Landing Pages: layout only. Colors and fonts come from the active theme. */
+.alp-section {
+	padding-block: var(--wp--preset--spacing--60, 4rem);
+	padding-inline: var(--wp--style--root--padding-right, 1.5rem);
+	margin-block: 0 !important;
+}
+/* Hero and final CTA stand out with a light tint of the theme's own text color. */
+.alp-hero,
+.alp-cta {
+	text-align: center;
+	background: color-mix(in srgb, currentColor 6%, transparent);
+}
+.alp-hero { padding-block: var(--wp--preset--spacing--80, 7rem); }
+.alp-hero .wp-block-buttons,
+.alp-cta .wp-block-buttons { justify-content: center; }
+.alp-hero h1 { margin-bottom: var(--wp--preset--spacing--30, 1rem); }
+
+/* Speakers sit side by side as cards. */
+.alp-speakers { gap: var(--wp--preset--spacing--40, 2rem); }
+.alp-card {
+	padding: var(--wp--preset--spacing--40, 2rem);
+	border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	border-radius: 12px;
+}
+.alp-card h3 { margin-top: 0; }
+.alp-card p:first-of-type { opacity: .75; }
+
+/* FAQ: readable width with dividers. */
+.alp-faq .wp-block-details {
+	border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	padding-block: var(--wp--preset--spacing--30, 1rem);
+}
+.alp-faq summary { font-weight: 600; cursor: pointer; }
+
+/* Speakers grid: same width as the theme's wide content, centered, cards stretch to fill. */
+.alp-speakers.alignfull {
+	box-sizing: border-box;
+	max-width: var(--wp--style--global--wide-size, 1200px);
+	margin-inline: auto !important;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)) !important;
+}
+
+/* Consecutive FAQ items read as one block, not separate sections. */
+.alp-faq:has(+ .alp-faq) { padding-bottom: 0; }
+.alp-faq + .alp-faq { padding-top: 0; }

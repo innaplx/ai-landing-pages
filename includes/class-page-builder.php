@@ -9,11 +9,19 @@ defined( 'ABSPATH' ) || exit;
 class ALP_Page_Builder {
 
 	public static function create( array $type, $title, array $sections ) {
-		$content = '';
+		$content  = '';
+		$speakers = '';
 		foreach ( $sections as $section ) {
-			$method   = 'render_' . $section['type'];
-			$content .= self::section( $section['type'], self::$method( $section['fields'] ) ) . "\n\n";
+			$method = 'render_' . $section['type'];
+			$block  = self::section( $section['type'], self::$method( $section['fields'] ), 'speaker' !== $section['type'] );
+			if ( 'speaker' === $section['type'] ) {
+				$speakers .= $block; // collected, then placed side by side in one grid
+				continue;
+			}
+			$content .= self::flush_speakers( $speakers ) . $block . "\n\n";
+			$speakers = '';
 		}
+		$content .= self::flush_speakers( $speakers );
 
 		$post_id = wp_insert_post( array(
 			'post_type'    => 'page',
@@ -21,6 +29,7 @@ class ALP_Page_Builder {
 			'post_title'   => sanitize_text_field( $title ),
 			'post_content' => $content,
 			'meta_input'   => array( '_alp_page_type' => $type['slug'] ),
+			'page_template' => self::no_title_template(),
 		), true );
 
 		if ( is_wp_error( $post_id ) ) {
@@ -34,6 +43,34 @@ class ALP_Page_Builder {
 			'preview_url'  => get_preview_post_link( $post_id ),
 			'next_step'    => 'Review and publish the draft in WordPress.',
 		);
+	}
+
+	/**
+	 * The hero already has the H1, so use the theme's own "no title" page template when it has one.
+	 * If the theme has none, the default template is used and nothing breaks.
+	 */
+	private static function no_title_template() {
+		$templates = wp_get_theme()->get_page_templates( null, 'page' );
+		foreach ( array_keys( $templates ) as $slug ) {
+			if ( false !== strpos( $slug, 'no-title' ) ) {
+				return $slug;
+			}
+		}
+		return '';
+	}
+
+	/** Wraps one or more speaker sections in a responsive grid (core Group with grid layout). */
+	private static function flush_speakers( $speakers ) {
+		if ( '' === $speakers ) {
+			return '';
+		}
+		$attrs = wp_json_encode( array(
+			'tagName'   => 'section',
+			'className' => 'alp-section alp-speakers',
+			'align'     => 'full',
+			'layout'    => array( 'type' => 'grid', 'minimumColumnWidth' => '14rem' ),
+		) );
+		return "<!-- wp:group {$attrs} --><section class=\"wp-block-group alignfull alp-section alp-speakers\">{$speakers}</section><!-- /wp:group -->\n\n";
 	}
 
 	/* ---------- section renderers ---------- */
@@ -67,15 +104,21 @@ class ALP_Page_Builder {
 
 	/* ---------- core block helpers ---------- */
 
-	private static function section( $type, $inner ) {
-		$class = 'alp-section alp-' . $type;
-		$attrs = wp_json_encode( array(
-			'tagName'      => 'section',
+	private static function section( $type, $inner, $full_width = true ) {
+		$class = ( $full_width ? 'alp-section ' : 'alp-card ' ) . 'alp-' . $type;
+		$attrs = array(
+			'tagName'      => $full_width ? 'section' : 'div',
 			'className'    => $class,
 			'templateLock' => 'contentOnly',
 			'layout'       => array( 'type' => 'constrained' ),
-		) );
-		return "<!-- wp:group {$attrs} --><section class=\"wp-block-group {$class}\">{$inner}</section><!-- /wp:group -->";
+		);
+		$tag = $attrs['tagName'];
+		if ( $full_width ) {
+			$attrs['align'] = 'full';
+			$class         .= ' alignfull';
+		}
+		$attrs = wp_json_encode( $attrs );
+		return "<!-- wp:group {$attrs} --><{$tag} class=\"wp-block-group {$class}\">{$inner}</{$tag}><!-- /wp:group -->";
 	}
 
 	private static function heading( $text, $level ) {

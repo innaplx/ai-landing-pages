@@ -57,6 +57,14 @@ Rejected: one shared service account (no attribution, can't revoke per person), 
 - A page = ordered array of section instances, so a section can be skipped or appear more than once.
 - Adding a page type = adding one config file (and new sections only if needed).
 
+**Why page types and not a free-form section library?** A simpler option is one shared library of sections that the AI combines however it likes. I chose page types on purpose:
+- A type carries rules a free-form page can't, such as "a webinar page must have a date and a registration button" or "the CTA is always last".
+- The AI can only pick from what a type allows, which is what keeps pages consistent no matter what it tries.
+- The brief describes "several types of landing pages", so types match how marketing already thinks.
+- Sections can still be shared between types, so a new type usually reuses existing sections and is just one JSON file.
+
+The cost is that a page marketing wants but no type covers needs a developer to add that type. If that happens often, the next step is an admin screen for page types (see section 5).
+
 ### 3.5 Easy editing for non-technical users
 - The output is normal core blocks, so everything is click-to-edit.
 - Each section is wrapped in a Group with `templateLock: "contentOnly"`, so people change text and images without breaking layout. They can still unlock a section if they need to.
