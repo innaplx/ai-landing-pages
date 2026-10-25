@@ -21,7 +21,7 @@ Time spent: about 5–6 hours in total, roughly a third on this document and the
 | Images? | Placeholders the team swaps in the editor. Media library support is a next step. |
 | Is the live theme a block theme or a classic theme? | Block theme with `theme.json`. Sections use core blocks only, which also render in classic themes, but presets would need a fallback there. |
 | Where do forms and CTAs connect (CRM, Marketo)? | Out of scope. CTAs are plain links. |
-| SEO, multiple languages / RTL, analytics? | Title and slug only, single language. |
+| SEO, multiple languages / RTL, analytics? | Title and slug only, single language. Meta description and the rest wait for review in the editor (and whichever SEO plugin the site already runs). |
 | Who can use it, and with what rights? | Each person connects with their own WordPress user (Application Password), editor role or lower. |
 
 ## 3. Proposed approach
@@ -102,7 +102,7 @@ All three need `edit_pages`, so they run with the connected user's rights. The `
 - Classic themes: core blocks should render there, but I didn't verify it, and the preset fallbacks would need checking.
 
 ## 5. What I'd do next
-More page types and sections, a media library tool, an admin screen for page types, tests for validation and block output, and usage logging.
+More page types and sections, a media library tool, an admin screen for page types, optional SEO fields once we know which SEO plugin the site uses, tests for validation and block output, and usage logging.
 
 ## 6. Running it
 Setup, connecting Claude Desktop and example prompts are in [README.md](README.md).
