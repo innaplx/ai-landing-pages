@@ -46,8 +46,6 @@ Open Settings > Developer > Edit Config and add:
 
 Restart Claude Desktop fully (quit it from the tray, not just the window). The server should show as running under Settings > Developer.
 
-On Windows, use the full path to `npx.cmd` as the command, for example `"C:\\Program Files\\nodejs\\npx.cmd"`, and save the file as UTF-8 without BOM. Notepad sometimes adds one, and then Claude can't read the config.
-
 ## Try it
 ```
 What landing page types can you create on our WordPress site?
