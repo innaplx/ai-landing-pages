@@ -5,7 +5,7 @@
  * Version: 0.2.0
  * Requires at least: 6.9
  * Requires PHP: 7.4
- * Author: Inna Plaksin
+ * Author: Ina Ritter
  */
 
 defined( 'ABSPATH' ) || exit;
