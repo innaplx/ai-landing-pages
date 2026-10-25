@@ -69,12 +69,9 @@ All three need `edit_pages`, so they run with the connected user's rights. The `
 - The hero holds the page's H1, so the plugin picks the theme's "no title" page template when it has one, to avoid a doubled title. If the theme has none, the default template is used.
 
 ### 3.4 Flexible page shapes
-- A page type is config: allowed sections, `min`/`max` for each, optional first/last rules.
-- A page is an ordered array of sections, so a section can be skipped or repeated.
-- Why types and not one free-form section library: a type carries rules a free page can't ("a webinar needs a date and a registration button", "the CTA is last"), and the brief itself talks about "several types of landing pages".
-- Sections are still shared, so a type is a recipe over them. A conference or PDF-download page is one more JSON file reusing `hero` and `cta`; only a new kind of section needs code.
-- More freedom later is a config change: a `generic` type that allows every section with loose rules.
-- The cost: a page no type covers needs a developer once, to add the type. Marketing still doesn't need one "for every page".
+- A page type is config: allowed sections, `min`/`max`, optional first/last. A page is an ordered list of those sections, so optional ones can be skipped and repeatable ones repeated.
+- Types, not a free-form section library: a type carries rules a free page can't (a webinar needs a date and a register button; the CTA is last), and the brief asks for several landing-page types. Sections stay shared — a type is a recipe over them. Reusing existing sections is one more JSON file; only a new section kind needs code.
+- More freedom later is config (e.g. a `generic` type with loose rules). The tradeoff: a shape no type covers needs a developer once. Marketing still doesn't need a type for every page.
 
 ### 3.5 Easy editing for non-technical users
 - The output is normal core blocks, so everything is click-to-edit.
