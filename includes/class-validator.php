@@ -97,6 +97,16 @@ class ALP_Validator {
 				}
 				return array( 'value' => $value );
 
+			case 'text': // longer text; keeps line breaks so the builder can split paragraphs
+				if ( ! is_string( $value ) ) {
+					return 'must be text.';
+				}
+				$value = trim( sanitize_textarea_field( $value ) );
+				if ( $max && mb_strlen( $value ) > $max ) {
+					return "is too long (max {$max} characters).";
+				}
+				return array( 'value' => $value );
+
 			case 'url':
 				$url = esc_url_raw( (string) $value, array( 'http', 'https' ) );
 				if ( ! $url || ! wp_http_validate_url( $url ) ) {
@@ -110,6 +120,9 @@ class ALP_Validator {
 				}
 				$items = array();
 				foreach ( $value as $item ) {
+					if ( ! is_scalar( $item ) ) {
+						return 'items must be strings.';
+					}
 					$item = sanitize_text_field( (string) $item );
 					if ( $max && mb_strlen( $item ) > $max ) {
 						return "has an item that is too long (max {$max} characters).";

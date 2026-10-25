@@ -11,6 +11,9 @@ class ALP_Page_Builder {
 	public static function create( array $type, $title, array $sections ) {
 		$content  = '';
 		$speakers = '';
+		// Sections render one-to-one, except `speaker`: consecutive speakers are collected
+		// and flushed into one grid wrapper. Another grouped section type would need the
+		// same collect/flush handling here.
 		foreach ( $sections as $section ) {
 			$method = 'render_' . $section['type'];
 			$block  = self::section( $section['type'], self::$method( $section['fields'] ), 'speaker' !== $section['type'] );
@@ -70,7 +73,8 @@ class ALP_Page_Builder {
 			'align'     => 'full',
 			'layout'    => array( 'type' => 'grid', 'minimumColumnWidth' => '14rem' ),
 		) );
-		return "<!-- wp:group {$attrs} --><section class=\"wp-block-group alignfull alp-section alp-speakers\">{$speakers}</section><!-- /wp:group -->\n\n";
+		$heading = self::heading( 'Speakers', 2 ); // H1 (hero) > H2 > H3 (speaker name)
+		return "<!-- wp:group {$attrs} --><section class=\"wp-block-group alignfull alp-section alp-speakers\">{$heading}{$speakers}</section><!-- /wp:group -->\n\n";
 	}
 
 	/* ---------- section renderers ---------- */
@@ -85,7 +89,7 @@ class ALP_Page_Builder {
 	private static function render_speaker( $f ) {
 		return self::heading( $f['name'], 3 )
 			. self::paragraph( $f['role'] )
-			. ( isset( $f['bio'] ) ? self::paragraph( $f['bio'] ) : '' );
+			. ( isset( $f['bio'] ) ? self::paragraphs( $f['bio'] ) : '' );
 	}
 
 	private static function render_agenda( $f ) {
@@ -94,7 +98,7 @@ class ALP_Page_Builder {
 
 	private static function render_faq( $f ) {
 		return '<!-- wp:details --><details class="wp-block-details"><summary>' . esc_html( $f['question'] ) . '</summary>'
-			. self::paragraph( $f['answer'] )
+			. self::paragraphs( $f['answer'] )
 			. '</details><!-- /wp:details -->';
 	}
 
@@ -128,6 +132,18 @@ class ALP_Page_Builder {
 
 	private static function paragraph( $text ) {
 		return '<!-- wp:paragraph --><p>' . esc_html( $text ) . '</p><!-- /wp:paragraph -->';
+	}
+
+	/** One paragraph block per blank-line-separated chunk, for `text` fields. */
+	private static function paragraphs( $text ) {
+		$out = '';
+		foreach ( preg_split( '/\R\s*\R/', $text ) as $chunk ) {
+			$chunk = trim( $chunk );
+			if ( '' !== $chunk ) {
+				$out .= self::paragraph( $chunk );
+			}
+		}
+		return $out;
 	}
 
 	private static function button( $label, $url ) {

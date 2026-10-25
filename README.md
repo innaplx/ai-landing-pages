@@ -68,21 +68,43 @@ The last one asks for sections the type doesn't have. Claude should build the pa
 Every page is saved as a draft. Claude returns an edit link and a preview link; review and publish in WordPress.
 
 ## Add a page type
-Drop a JSON file in `page-types/`. It shows up in `list-page-types` right away, with no code change.
+If the new type only reuses existing sections (`hero`, `speaker`, `agenda`, `faq`, `cta`), drop a JSON file in `page-types/`. It shows up in `list-page-types` right away, with no code change. Reused sections must keep the fields their renderer needs:
 
 ```json
 {
   "slug": "product-launch",
   "label": "Product launch",
-  "description": "One line the AI reads to pick the right type.",
+  "description": "Announces a new product and sends people to try it.",
   "sections": {
     "hero": {
       "label": "Hero",
-      "description": "What this section is for.",
+      "description": "Product name, launch date and a main button.",
       "min": 1, "max": 1, "position": "first",
       "fields": {
-        "headline":   { "type": "string", "required": true, "max_length": 80 },
-        "button_url": { "type": "url", "required": true }
+        "headline":     { "type": "string", "required": true,  "max_length": 80 },
+        "subheadline":  { "type": "string", "required": false, "max_length": 200 },
+        "date_time":    { "type": "string", "required": true,  "max_length": 60 },
+        "button_label": { "type": "string", "required": true,  "max_length": 30 },
+        "button_url":   { "type": "url",    "required": true }
+      }
+    },
+    "faq": {
+      "label": "FAQ item",
+      "description": "One question and answer. Optional; repeat for each question.",
+      "min": 0, "max": 6,
+      "fields": {
+        "question": { "type": "string", "required": true, "max_length": 120 },
+        "answer":   { "type": "text",   "required": true, "max_length": 400 }
+      }
+    },
+    "cta": {
+      "label": "Closing call to action",
+      "description": "Final push to try the product.",
+      "min": 1, "max": 1, "position": "last",
+      "fields": {
+        "headline":     { "type": "string", "required": true, "max_length": 80 },
+        "button_label": { "type": "string", "required": true, "max_length": 30 },
+        "button_url":   { "type": "url",    "required": true }
       }
     }
   }
@@ -92,13 +114,13 @@ Drop a JSON file in `page-types/`. It shows up in `list-page-types` right away, 
 - `sections`: the section types the page may use, keyed by section name.
 - `min` / `max`: how many times the section may appear. `min: 0` makes it optional, `max` above 1 makes it repeatable.
 - `position`: optional, `first` or `last`.
-- `fields`: each field has a `type` (`string`, `url` or `list`), `required`, and limits: `max_length`, and `min_items` / `max_items` for lists.
+- `fields`: each field has a `type` (`string`, `text` for longer text with paragraphs, `url` or `list`), `required`, and limits: `max_length`, and `min_items` / `max_items` for lists.
 
-Section names must have a renderer in `includes/class-page-builder.php` (`render_<name>`). Existing ones are `hero`, `speaker`, `agenda`, `faq` and `cta`. A type that reuses one should keep that section's fields, since the renderer expects them (the example above is shortened). A type that only reuses existing sections is just the JSON file; a new kind of section needs one small render method.
+A new kind of section (say, a download form) needs the JSON plus one `render_<name>` method in `includes/class-page-builder.php`.
 
 ## Project structure
 ```
-ai-landing-pages.php          Plugin bootstrap, checks for the Abilities API, loads the CSS
+ai-landing-pages.php          Plugin bootstrap, checks for the Abilities API, loads the CSS on landing pages only
 includes/
   class-abilities.php         The three abilities exposed over MCP
   class-registry.php          Loads page types from page-types/*.json

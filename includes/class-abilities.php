@@ -91,11 +91,18 @@ class ALP_Abilities {
 		if ( ! $type ) {
 			return new WP_Error( 'alp_unknown_type', 'Unknown page type. Call list-page-types to see the available types.' );
 		}
+		$title = sanitize_text_field( (string) ( $input['title'] ?? '' ) );
+		if ( '' === $title ) {
+			return new WP_Error( 'alp_invalid', 'The page was not created: title is required.' );
+		}
+		if ( mb_strlen( $title ) > 200 ) {
+			return new WP_Error( 'alp_invalid', 'The page was not created: title is too long (max 200 characters).' );
+		}
 		$sections = ALP_Validator::validate( $type, (array) ( $input['sections'] ?? array() ) );
 		if ( is_wp_error( $sections ) ) {
 			return $sections;
 		}
-		return ALP_Page_Builder::create( $type, $input['title'] ?? $type['label'], $sections );
+		return ALP_Page_Builder::create( $type, $title, $sections );
 	}
 
 	public static function list_page_types() {

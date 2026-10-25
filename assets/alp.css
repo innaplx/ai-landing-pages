@@ -48,3 +48,6 @@
 .alp-speakers > .wp-block-group.alp-card.alp-speaker {
 	padding: var(--wp--preset--spacing--40, 2rem);
 }
+
+/* "Speakers" heading spans the whole grid row. */
+.alp-speakers > h2 { grid-column: 1 / -1; text-align: center; margin: 0; }

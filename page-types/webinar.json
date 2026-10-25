@@ -22,7 +22,7 @@
       "fields": {
         "name":  { "type": "string", "required": true,  "max_length": 60 },
         "role":  { "type": "string", "required": true,  "max_length": 80 },
-        "bio":   { "type": "string", "required": false, "max_length": 300 }
+        "bio":   { "type": "text",   "required": false, "max_length": 300 }
       }
     },
     "agenda": {
@@ -40,7 +40,7 @@
       "min": 0, "max": 8,
       "fields": {
         "question": { "type": "string", "required": true, "max_length": 120 },
-        "answer":   { "type": "string", "required": true, "max_length": 400 }
+        "answer":   { "type": "text",   "required": true, "max_length": 400, "description": "Separate paragraphs with a blank line." }
       }
     },
     "cta": {
